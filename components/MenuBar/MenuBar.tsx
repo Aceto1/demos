@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { prependOnceListener } from 'process';
 import { useState } from 'react';
 
 export interface MenuBarProps {
@@ -29,7 +28,7 @@ const MenuBar: React.FC<MenuBarProps> = (props) => {
           onChange={event => setInsertValue(event.target.valueAsNumber)} 
           value={insertValue === NaN ? '' : insertValue} 
         />
-        <button onClick={() => insert(insertValue)}>Insert</button>
+        <button disabled={insertValue === NaN} onClick={() => insert(insertValue)}>Insert</button>
       </div>
 
       <style jsx>{`

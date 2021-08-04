@@ -1,5 +1,5 @@
 import { CustomNodeElementProps, RawNodeDatum } from "react-d3-tree/lib/types/common";
-import TreeNode from "../types/TreeNode";
+import TreeNode from "../../types/RedBlackTree/TreeNode";
 
 export interface NodeProps extends CustomNodeElementProps {
   activeNode: TreeNode<number>

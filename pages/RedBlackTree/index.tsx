@@ -1,12 +1,11 @@
 import Head from 'next/head'
-import MenuBar from './MenuBar/MenuBar';
+import MenuBar from '../../components/MenuBar/MenuBar';
 import Tree from 'react-d3-tree';
-import Node from './Node/Node';
+import Node from '../../components/Node/Node';
 import { useEffect, useState } from 'react';
 import { RawNodeDatum } from 'react-d3-tree/lib/types/common';
-import TreeNode from './types/TreeNode';
-import RBTree from './types/Tree';
-import { unwatchFile } from 'fs';
+import TreeNode from '../../types/RedBlackTree/TreeNode';
+import RBTree from '../../types/RedBlackTree/Tree';
 
 const RedBlackTree: React.FC = () => {
   const NIL: TreeNode<number> = {
@@ -96,7 +95,7 @@ const RedBlackTree: React.FC = () => {
     else
       x.parent.rightChild = y;
 
-      y.parent = x.parent;
+    y.parent = x.parent;
   }
 
   const inOrderTreeWalk = (x: TreeNode<number>) : TreeNode<number>[] => {
@@ -156,6 +155,7 @@ const RedBlackTree: React.FC = () => {
     if (color === 'black')
       deleteFixup(x, tree);
 
+    tree.root.color = 'black';
     setInternalTree(tree);
   }
 
@@ -250,6 +250,7 @@ const RedBlackTree: React.FC = () => {
 
         if (w.leftChild.color === 'black' && w.rightChild.color === 'black') {
           w.color = 'red';
+          node.parent.color = 'black';
           node = node.parent;
         }
         else {
@@ -299,7 +300,7 @@ const RedBlackTree: React.FC = () => {
       }
     }
 
-    node.color = 'black';
+    node.color = 'black'
   }
 
   const leftRotate = (node: TreeNode<number>, tree: RBTree<number>) => {
