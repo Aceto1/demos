@@ -1,11 +1,12 @@
 import Head from 'next/head'
-import MenuBar from '../../components/MenuBar/MenuBar';
+import MenuBar from './MenuBar';
 import Tree from 'react-d3-tree';
 import Node from '../../components/Node/Node';
 import { useEffect, useState } from 'react';
 import { RawNodeDatum } from 'react-d3-tree/lib/types/common';
 import TreeNode from '../../types/RedBlackTree/TreeNode';
 import RBTree from '../../types/RedBlackTree/Tree';
+import Footer from '../../components/Footer/Footer';
 
 const RedBlackTree: React.FC = () => {
   const NIL: TreeNode<number> = {
@@ -371,27 +372,7 @@ const RedBlackTree: React.FC = () => {
         />
       </main>
 
-      <footer>
-        <p>
-          Copyright {new Date().getFullYear()}
-        </p>
-        <p>
-          Learn more about me at
-          <a
-            href="https://aceto.dev/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            aceto.dev
-          </a>
-        </p>
-
-        <p>
-          <a href='mailto:lucas@aceto.dev'>
-            Contact me
-          </a>
-        </p>
-      </footer>
+      <Footer />
 
       <style jsx>{`
         .container {
@@ -401,26 +382,6 @@ const RedBlackTree: React.FC = () => {
         main {
           height: calc(100vh - 150px);
           width: 100%;
-        }
-
-        footer {
-          width: 100%;
-          height: 70px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: space-between;
-        }
-
-        footer p {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 0 1em;
-        }
-
-        footer a {
-          text-decoration: underline;
-          margin-left: 5px
         }
       `}</style>
 

@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-
+import Footer from '../components/Footer/Footer';
 
 export default function Home() {
   return (
@@ -23,34 +23,14 @@ export default function Home() {
             </a>
           </Link>
 
-          <a href="/AStar" className="card">
-            <h3>A* Pathfining</h3>
-            <p>See how the A* pathfinding algorithm works in real time!</p>
+          <a href="/Pathfinding" className="card">
+            <h3>Pathfinding Algorithms</h3>
+            <p>See how the different pathfinding algorithms works in real time!</p>
           </a>
         </div>
       </main>
 
-      <footer>
-        <p>
-          Copyright {new Date().getFullYear()}
-        </p>
-        <p>
-          Learn more about me at
-          <a
-            href="https://aceto.dev/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            aceto.dev
-          </a>
-        </p>
-
-        <p>
-          <a href='mailto:lucas@aceto.dev'>
-            Contact me
-          </a>
-        </p>
-      </footer>
+      <Footer />
 
       <style jsx>{`
         .container {
