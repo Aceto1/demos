@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Node from '../../types/Pathfinding/Algorithms/Node';
 import Point from '../../types/Pathfinding/Point';
 
 export interface GridProps {
@@ -9,10 +10,11 @@ export interface GridProps {
   goal: Point;
   walls: Point[];
   onCellClick: (cell: Point) => void;
+  path: Point[] | null;
 }
 
 const Grid: React.FC<GridProps> = (props) => {
-  const getCellColor = (row: number, column: number) => {
+  const getCellColor = (row: number, column: number, path: Point[] | null) => {
     if (props.start.row === row && props.start.column === column)
       return "green";
 
@@ -21,6 +23,10 @@ const Grid: React.FC<GridProps> = (props) => {
 
     if (props.walls.some(m => m.row === row && m.column === column))
       return "gray";
+
+    const isInPath = path?.some((point) => { return point.row === row && point.column === column }) ?? false;
+    if (isInPath)
+      return "blue";
 
     return "white"
   }
@@ -33,10 +39,10 @@ const Grid: React.FC<GridProps> = (props) => {
           className="cell"
           draggable={false}
           onMouseOver={event => {
-            if(event.buttons === 1)
-              props.onCellClick({row: i, column: j});
+            if (event.buttons === 1)
+              props.onCellClick({ row: i, column: j });
           }}
-          onMouseDown={event => props.onCellClick({row: i, column: j})}        
+          onMouseDown={event => props.onCellClick({ row: i, column: j })}
           style={{
             gridColumn: j + 1,
             gridRow: i + 1,
@@ -44,7 +50,7 @@ const Grid: React.FC<GridProps> = (props) => {
             height: "3em",
             width: "3em",
             border: "1px solid black",
-            backgroundColor: getCellColor(i, j)
+            backgroundColor: getCellColor(i, j, props.path)
           }}
           key={`${j},${i}`}
         />

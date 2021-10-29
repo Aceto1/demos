@@ -8,6 +8,11 @@ export interface MenuBarProps {
   algorithmSelected: (algorithm: Algorithm) => void;
   clear: () => void;
   run: () => void;
+  rowCount: number;
+  columnCount: number;
+  setRowCount: (rowCount: number) => void;
+  setColumnCount: (columnCount: number) => void;
+  reset: () => void;
 }
 
 const MenuBar: React.FC<MenuBarProps> = (props) => {
@@ -39,6 +44,17 @@ const MenuBar: React.FC<MenuBarProps> = (props) => {
         <button onClick={() => props.run()}>
           Run
         </button>
+        
+        <button onClick={() => props.reset()}>
+          Reset
+        </button>
+
+        <label htmlFor="row-input">Row count:</label>
+        <input id='row-input' type='number' value={props.rowCount} onChange={event => props.setRowCount(event.target.valueAsNumber)} />
+
+        
+        <label htmlFor="column-input">Column count:</label>
+        <input id='column-input' type='number' value={props.columnCount} onChange={event => props.setColumnCount(event.target.valueAsNumber)} />
       </div>
 
       <style jsx>{`
