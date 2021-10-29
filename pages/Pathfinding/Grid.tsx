@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Node from '../../types/Pathfinding/Algorithms/Node';
 import Point from '../../types/Pathfinding/Point';
 
 export interface GridProps {
@@ -10,11 +9,13 @@ export interface GridProps {
   goal: Point;
   walls: Point[];
   onCellClick: (cell: Point) => void;
-  path: Point[] | null;
+  path: Point[];
+  discoveredPoints: Point[];
+  visitedPoints: Point[];
 }
 
 const Grid: React.FC<GridProps> = (props) => {
-  const getCellColor = (row: number, column: number, path: Point[] | null) => {
+  const getCellColor = (row: number, column: number, path: Point[], discoveredPoints: Point[], visitedPoints: Point[]) => {
     if (props.start.row === row && props.start.column === column)
       return "green";
 
@@ -24,9 +25,17 @@ const Grid: React.FC<GridProps> = (props) => {
     if (props.walls.some(m => m.row === row && m.column === column))
       return "gray";
 
-    const isInPath = path?.some((point) => { return point.row === row && point.column === column }) ?? false;
+    const isInPath = path.some((point) => { return point.row === row && point.column === column }) ?? false;
     if (isInPath)
       return "blue";
+
+    const isInVisitedPoints = visitedPoints.some((point) => { return point.row === row && point.column === column }) ?? false;
+    if (isInVisitedPoints)
+      return "#FF6347";
+
+    const isInDiscoveredPoints = discoveredPoints.some((point) => { return point.row === row && point.column === column }) ?? false;
+    if (isInDiscoveredPoints)
+      return "#98FB98";
 
     return "white"
   }
@@ -50,7 +59,7 @@ const Grid: React.FC<GridProps> = (props) => {
             height: "3em",
             width: "3em",
             border: "1px solid black",
-            backgroundColor: getCellColor(i, j, props.path)
+            backgroundColor: getCellColor(i, j, props.path, props.discoveredPoints, props.visitedPoints)
           }}
           key={`${j},${i}`}
         />

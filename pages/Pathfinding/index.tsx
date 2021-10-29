@@ -8,8 +8,8 @@ import Item from '../../types/Pathfinding/Item';
 import Point from '../../types/Pathfinding/Point';
 import Algorithm from '../../types/Pathfinding/Algorithm';
 import Node from '../../types/Pathfinding/Algorithms/Node';
-import AStar from '../../types/Pathfinding/Algorithms/AStart';
-import { getDomainLocale } from 'next/dist/shared/lib/router/router';
+import AStar from '../../types/Pathfinding/Algorithms/AStar';
+import AlgorithmResult from '../../types/Pathfinding/AlgorithmResult';
 
 const RedBlackTree: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<Item>("wall");
@@ -19,7 +19,9 @@ const RedBlackTree: React.FC = () => {
   const [walls, setWalls] = useState<Point[]>([]);
   const [rowCount, setRowCount] = useState(11);
   const [columnCount, setColumnCount] = useState(30);
-  const [path, setPath] = useState<Point[] | null>(null);
+  const [path, setPath] = useState<Point[]>([]);
+  const [visitedPoints, setVisistedPoints] = useState<Array<Point>>([]);
+  const [discoveredPoints, setDiscoveredPoints] = useState<Array<Point>>([]);
 
   const onCellClick = (cell: Point) => {
     if (selectedItem === "goal") {
@@ -55,13 +57,50 @@ const RedBlackTree: React.FC = () => {
     setStart({row: -1, column: -1});
     setGoal({row: -1, column: -1});
     setWalls([]);
-    setPath(null);
+    setPath([]);
   }
 
   const clearPath = () => {
-    setPath(null);
+    setPath([]);
+    setDiscoveredPoints([]);
+    setVisistedPoints([]);
   }
 
+  const showStep = (result: AlgorithmResult, index: number) => {
+    if(index >= result.steps.length - 1) {
+      setPath(result.path);
+      return;
+    }
+    
+    const currentStep = result.steps[index];
+
+    const newDiscoveredPoints: Point[] = [];
+    const newVisitedPoints: Point[] = [];
+
+    for (const visitedPoint of currentStep.visited) {      
+      newVisitedPoints.push(visitedPoint);
+    }
+
+    for (const discoveredPoint of currentStep.discovered) {
+      newDiscoveredPoints.push(discoveredPoint);
+    }    
+
+    setVisistedPoints(prev => [...prev, ...newVisitedPoints]);
+    setDiscoveredPoints(prev => {
+      for (const visitedPoint of newVisitedPoints) {
+        const pointIndex = prev.findIndex(point => point.column == visitedPoint.column && point.row == visitedPoint.row);
+  
+        if(pointIndex !== -1)
+          prev.splice(pointIndex, 1);
+      }
+
+      return [...prev, ...newDiscoveredPoints];
+    });
+
+    setTimeout(() => {
+      showStep(result, ++index);
+    }, 200);
+  }
 
   const buildNodes = (): Node[] => {
     const result = new Array<Node>();
@@ -112,14 +151,9 @@ const RedBlackTree: React.FC = () => {
       const startNode = nodes.find(node => node.column === start.column && node.row === start.row);
       const endNode = nodes.find(node => node.column === goal.column && node.row === goal.row);
 
-      const newPath: Point[] = AStar(startNode, endNode).map(node => {
-        return {
-          column: node.column,
-          row: node.row
-        }
-      })
+      const result =  AStar(startNode, endNode);
 
-      setPath(newPath);
+      showStep(result, 0);
     }
   }
 
@@ -144,7 +178,7 @@ const RedBlackTree: React.FC = () => {
         />
 
         <div className="gridcontainer">
-          <Grid onCellClick={onCellClick} start={start} goal={goal} walls={walls} rows={rowCount} columns={columnCount} path={path} />
+          <Grid onCellClick={onCellClick} start={start} goal={goal} walls={walls} rows={rowCount} columns={columnCount} path={path} discoveredPoints={discoveredPoints} visitedPoints={visitedPoints} />
         </div>
 
         <Footer />
