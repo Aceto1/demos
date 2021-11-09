@@ -6,10 +6,15 @@ const getCheapestNode = (nodes: Set<Node>) => {
   let node = nodes.values().next().value as Node;
 
   nodes.forEach(newNode => {
-    if (newNode.fCost < node.fCost || newNode.fCost < node.fCost) {
-      if (newNode.hCost < node.hCost)
+    if (newNode.fCost < node.fCost) {
         node = newNode;
-      return;
+        return;
+    }
+    else if(newNode.fCost == node.fCost) {
+      if (newNode.hCost < node.hCost) {
+        node = newNode;
+        return;
+      }
     }
   });
 
