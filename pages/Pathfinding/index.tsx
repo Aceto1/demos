@@ -22,6 +22,8 @@ const RedBlackTree: React.FC = () => {
   const [path, setPath] = useState<Point[]>([]);
   const [visitedPoints, setVisistedPoints] = useState<Array<Point>>([]);
   const [discoveredPoints, setDiscoveredPoints] = useState<Array<Point>>([]);
+  const [animationDelay, setAnimationDelay] = useState(50);
+  const [isAnimationRunning, setIsAnimationRunning] = useState(false);
 
   const onCellClick = (cell: Point) => {
     if (selectedItem === "goal") {
@@ -54,8 +56,8 @@ const RedBlackTree: React.FC = () => {
   }
 
   const clear = () => {
-    setStart({row: -1, column: -1});
-    setGoal({row: -1, column: -1});
+    setStart({ row: -1, column: -1 });
+    setGoal({ row: -1, column: -1 });
     setWalls([]);
     setPath([]);
   }
@@ -67,30 +69,30 @@ const RedBlackTree: React.FC = () => {
   }
 
   const showStep = (result: AlgorithmResult, index: number) => {
-    if(index >= result.steps.length - 1) {
+    if (index >= result.steps.length - 1) {
       setPath(result.path);
       return;
     }
-    
+
     const currentStep = result.steps[index];
 
     const newDiscoveredPoints: Point[] = [];
     const newVisitedPoints: Point[] = [];
 
-    for (const visitedPoint of currentStep.visited) {      
+    for (const visitedPoint of currentStep.visited) {
       newVisitedPoints.push(visitedPoint);
     }
 
     for (const discoveredPoint of currentStep.discovered) {
       newDiscoveredPoints.push(discoveredPoint);
-    }    
+    }
 
     setVisistedPoints(prev => [...prev, ...newVisitedPoints]);
     setDiscoveredPoints(prev => {
       for (const visitedPoint of newVisitedPoints) {
         const pointIndex = prev.findIndex(point => point.column == visitedPoint.column && point.row == visitedPoint.row);
-  
-        if(pointIndex !== -1)
+
+        if (pointIndex !== -1)
           prev.splice(pointIndex, 1);
       }
 
@@ -99,7 +101,7 @@ const RedBlackTree: React.FC = () => {
 
     setTimeout(() => {
       showStep(result, ++index);
-    }, 200);
+    }, animationDelay);
   }
 
   const buildNodes = (): Node[] => {
@@ -123,7 +125,7 @@ const RedBlackTree: React.FC = () => {
 
     for (const node of result) {
       const neighbours = result.filter(resultNode => {
-        if(node.column === resultNode.column - 1 && node.row === resultNode.row ||
+        if (node.column === resultNode.column - 1 && node.row === resultNode.row ||
           node.column === resultNode.column + 1 && node.row === resultNode.row ||
           node.column === resultNode.column - 1 && node.row === resultNode.row - 1 ||
           node.column === resultNode.column + 1 && node.row === resultNode.row + 1 ||
@@ -131,8 +133,8 @@ const RedBlackTree: React.FC = () => {
           node.column === resultNode.column + 1 && node.row === resultNode.row - 1 ||
           node.column === resultNode.column && node.row === resultNode.row + 1 ||
           node.column === resultNode.column && node.row === resultNode.row - 1) {
-            return resultNode;
-          }
+          return resultNode;
+        }
       });
 
       node.neighours = neighbours;
@@ -142,18 +144,20 @@ const RedBlackTree: React.FC = () => {
   }
 
   const run = () => {
-    if(goal.row === -1 && goal.row === -1 || start.row === -1 && start.column === -1)
+    if (goal.row === -1 && goal.row === -1 || start.row === -1 && start.column === -1)
       return;
 
-    if(selectedAlgorithm === 'a*') {
+    if (selectedAlgorithm === 'a*') {
       const nodes = buildNodes();
 
       const startNode = nodes.find(node => node.column === start.column && node.row === start.row);
       const endNode = nodes.find(node => node.column === goal.column && node.row === goal.row);
 
-      const result =  AStar(startNode, endNode);
+      const result = AStar(startNode, endNode);
 
+      setIsAnimationRunning(true);
       showStep(result, 0);
+      setIsAnimationRunning(false);
     }
   }
 
@@ -165,16 +169,19 @@ const RedBlackTree: React.FC = () => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <MenuBar 
-          algorithmSelected={setSelectedAlgorithm} 
-          itemSelected={setSelectedItem} 
-          clear={clear} 
+        <MenuBar
+          algorithmSelected={setSelectedAlgorithm}
+          itemSelected={setSelectedItem}
+          clear={clear}
           run={run}
           rowCount={rowCount}
           setRowCount={setRowCount}
           columnCount={columnCount}
           setColumnCount={setColumnCount}
+          animationDelay={animationDelay}
+          setAnimationDelay={setAnimationDelay}
           reset={clearPath}
+          isAnimationRunning={isAnimationRunning}
         />
 
         <div className="gridcontainer">
