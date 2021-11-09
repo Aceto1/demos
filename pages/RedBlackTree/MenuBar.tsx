@@ -19,7 +19,7 @@ const MenuBar: React.FC<MenuBarProps> = (props) => {
       <div className='menu'>
         <Link href='/'>
           <a>
-            <Image src='/LeftArrow.svg' width='30px' height='30px' />
+            <Image alt="" src='/LeftArrow.svg' width='30px' height='30px' />
           </a>
         </Link>
 

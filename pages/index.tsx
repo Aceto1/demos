@@ -23,10 +23,12 @@ export default function Home() {
             </a>
           </Link>
 
-          <a href="/Pathfinding" className="card">
-            <h3>Pathfinding Algorithms</h3>
-            <p>See how the different pathfinding algorithms works in real time!</p>
-          </a>
+          <Link href="/Pathfinding">
+            <a className="card">
+              <h3>Pathfinding Algorithms</h3>
+              <p>See how the different pathfinding algorithms works in real time!</p>
+            </a>
+          </Link>
         </div>
       </main>
 

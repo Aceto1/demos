@@ -31,6 +31,7 @@ const RedBlackTree: React.FC = () => {
 
   useEffect(() => {
     setNodes(mapToDisplayNodes(internalTree.root));
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [internalTree]);
 
   const mapToDisplayNodes = (rootNode: TreeNode<number>): RawNodeDatum => {
